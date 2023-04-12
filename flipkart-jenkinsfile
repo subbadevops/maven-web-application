@@ -1,0 +1,58 @@
+pipeline
+{
+agent any
+
+tools{
+maven "Maven_3.9.1"
+}
+  stages
+  {
+    stage('CheckoutCode')
+      {
+       steps
+           {
+              git credentialsId: '045deed1-c6ee-4287-b4ba-6082b2610a6c', url: 'https://github.com/DevOps-Rjpt-2022/maven-web-application.git'
+           }
+      }
+     stage('Build')
+       {
+       steps
+          {
+             sh "mvn clean package"
+          }
+       }
+     stage('SonarQubeReport')
+       {
+       steps
+          {
+             sh "mvn sonar:sonar"
+          }
+       }
+       stage('DeployTONexus')
+       {
+       steps
+          {
+             sh "mvn deploy"
+          }
+       }
+       stage('DeployToTomcat')
+        {
+
+        steps
+          {
+         sshagent(['520a8fe2-9c33-4337-b92f-2a53c5189336']) 
+                {
+             sh "rm -rf /opt/apache-tomcat-9.0.73/webapps/maven-web-application.war"
+             sh " scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@13.235.16.197:/opt/apache-tomcat-9.0.73/webapps/"
+                }
+          }
+
+
+        }
+    
+
+  }
+
+
+}
+
