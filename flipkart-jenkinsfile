@@ -1,6 +1,9 @@
 pipeline
 {
-agent any
+agent {
+
+label 'Java_Node-1'
+}
 
 tools{
 maven "Maven_3.9.1"
