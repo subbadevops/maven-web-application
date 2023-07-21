@@ -28,7 +28,7 @@ stage ( ' GenerateSonarQubeReport ' )
 sh "${mavenHome}/bin/mvn clean sonar:sonar"
 }
 stage ( ' uploadingArtifactsIntoNexus ' )
-
+//jenkins
 {
 sh "${mavenHome}/bin/mvn deploy"
 }
